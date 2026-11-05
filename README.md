@@ -1,8 +1,8 @@
 # Uponor Bridge
 
-Control an Uponor Smatrix Base underfloor heating system from your phone or Home Assistant, using a small ESP32 stick on the thermostat bus.
+Control an Uponor Smatrix Base underfloor heating system from your phone's browser, using a small ESP32 stick on the thermostat bus.
 
-The stick works out which thermostats you have by listening to the bus, so there are no addresses to look up or configure. It also serves its own phone-friendly web page, so you don't need Home Assistant to use it.
+The stick serves its own web page, so all you need is the stick, your Wi-Fi and a phone. It works out which thermostats you have by listening to the bus, so there are no addresses to look up or configure. Home Assistant is optional.
 
 <img src="docs/screenshot.png" alt="Phone web page showing room temperature, target controls and a 24 hour graph (simulated data)" width="320">
 
@@ -10,13 +10,13 @@ The stick works out which thermostats you have by listening to the bus, so there
 
 ## Features
 
-- **Automatic detection:** finds up to 8 thermostats and picks the one it can control
 - **Web page:** room temperature, target control, other rooms, and a 24-hour graph, with light and dark themes
+- **Automatic detection:** finds up to 8 thermostats and picks the one it can control
 - **Confirmed changes:** a new target only shows as set once the thermostat confirms it on the bus
-- **Home Assistant:** appears as a normal ESPHome device, with a climate entity and room sensors
 - **Wi-Fi setup hotspot:** if the stick can't join a network, it starts its own hotspot so you can enter your details
 - **Quiet by default:** it only transmits when you change the temperature, in the gaps between polls
 - **Wiring check:** shows a clear message when no data is arriving from the bus
+- **Optional Home Assistant support:** appears as a normal ESPHome device if you want it
 
 ## What you need
 
@@ -49,7 +49,7 @@ cp secrets.example.yaml secrets.yaml   # then fill in your own values
 esphome run uponor-bridge.yaml
 ```
 
-Create your own API key and passwords in `secrets.yaml`. `api_key` must be a base64-encoded 32-byte key, which you can make with `openssl rand -base64 32`.
+Create your own passwords in `secrets.yaml`. The firmware also needs an `api_key`, even if you never use Home Assistant. It must be a base64-encoded 32-byte key, which you can make with `openssl rand -base64 32`.
 
 For a different board or pins, change `esp32:` and `uart:` in `uponor-bridge.yaml`.
 
@@ -62,7 +62,15 @@ For a different board or pins, change `esp32:` and `uart:` in `uponor-bridge.yam
 
 The result is saved, so it survives a restart. Use **Re-run detection** under *Device details* if your thermostats change.
 
-To use Home Assistant, add the stick through the ESPHome integration with your `api_key`.
+## Optional: Home Assistant
+
+You don't need Home Assistant, and the stick runs fine without it. Add it if you want things the web page can't do:
+
+- Control from outside your home network
+- History longer than 24 hours that survives a restart
+- Automations and schedules
+
+Add the stick through the ESPHome integration with your `api_key`. You'll get a climate entity, room sensors and the status sensors. The web page keeps working alongside it.
 
 ## How detection works
 
