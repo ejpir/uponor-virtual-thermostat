@@ -1,0 +1,12 @@
+# uponor-bridge.yaml plus a hex log of every byte on the UART.
+packages:
+  base: !include uponor-bridge.yaml
+
+uart:
+  debug:
+    direction: BOTH
+    dummy_receiver: false
+    after:
+      timeout: 20ms
+    sequence:
+      - lambda: UARTDebug::log_hex(direction, bytes, ' ');

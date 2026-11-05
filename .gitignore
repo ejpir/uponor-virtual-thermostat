@@ -1,0 +1,8 @@
+secrets.yaml
+.esphome/
+firmware-backup/
+__pycache__/
+
+# Personal: this house's recovered configs and the old impersonation component
+nick*.yaml
+components/uponor_virtual_thermostat/
